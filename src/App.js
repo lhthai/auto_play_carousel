@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper";
+import "swiper/css";
+import "swiper/css/autoplay";
+import img1 from "./assets/images/2.jpg";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Swiper modules={[Autoplay]} slidesPerView={1} autoplay={{ delay: 5000 }}>
+      <SwiperSlide
+        style={{
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <img src={img1} alt="" />
+      </SwiperSlide>
+    </Swiper>
   );
-}
+};
 
 export default App;
