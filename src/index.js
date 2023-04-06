@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/notification/:id" element={<App />} />
+      <Route path="/notification/:station" element={<App />} />
     </Routes>
   </BrowserRouter>
 );

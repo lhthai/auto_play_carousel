@@ -17,7 +17,7 @@ const signalHub = "http://10.50.4.5:8888/signalhub";
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
-  const { id } = useParams();
+  const { station } = useParams();
   const [connection, setConnection] = useState(null);
   const [currentWarning, setCurrentWarning] = useState("");
   const [validTo, setValidTo] = useState(null);
@@ -38,9 +38,9 @@ const App = () => {
         .start()
         .then(() => {
           connection.on("StartQCWarning", (warningID, station) => {
-            if (id.toLowerCase() === station.toLowerCase()) {
+            if (station.toLowerCase() === station.toLowerCase()) {
               setCurrentWarning(warningID);
-              getWarning(id);
+              getWarning(warningID);
             }
           });
           connection.on("StopQCWarning", () => {
@@ -54,7 +54,7 @@ const App = () => {
 
   useEffect(() => {
     getImages();
-  }, [id]);
+  }, [station]);
 
   useEffect(() => {
     getLatestWarning();
@@ -69,7 +69,7 @@ const App = () => {
   const getImages = async () => {
     setIsLoading(true);
     try {
-      const { data } = await axios.get(`${apiUrl}/${id}`);
+      const { data } = await axios.get(`${apiUrl}/${station}`);
       setImages(data);
     } catch (error) {
       console.log(error);
@@ -80,7 +80,7 @@ const App = () => {
   const getLatestWarning = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`${apiUrl}/latestwarning/${id}`);
+      const res = await axios.get(`${apiUrl}/latestwarning/${station}`);
       if (res.status === 204) {
         getImages();
       } else if (res.status === 200) {
@@ -98,6 +98,7 @@ const App = () => {
     setIsLoading(true);
     try {
       const { data } = await axios.get(`${apiUrl}/warning/${id}`);
+      // console.log(data)
       setImages(data);
     } catch (error) {
       console.log(error);
@@ -105,42 +106,41 @@ const App = () => {
     setIsLoading();
   };
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  } else {
-    return (
-      <div
-        style={{
-          display: "flex",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+  if (isLoading) return <div>Loading</div>;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Swiper
+        modules={[Autoplay]}
+        slidesPerView={1}
+        autoplay={images.length > 1 ? { delay: 8000 } : false}
+        loop
+        speed={1500}
       >
-        <Swiper
-          modules={[Autoplay]}
-          slidesPerView={1}
-          autoplay={{ delay: 8000 }}
-          loop
-          speed={1500}
-        >
-          {images.map((imgName, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={
-                  process.env.PUBLIC_URL + currentWarning === ""
-                    ? `/images/${id}/${imgName}`
-                    : `/images/warning/${currentWarning}/${imgName}`
-                }
-                alt=""
-                style={{ maxHeight: "99vh", width: "100%" }}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    );
-  }
+        {images.map((imgName, index) => (
+          <SwiperSlide key={index}>
+            <img
+              src={
+                currentWarning === ""
+                  ? process.env.PUBLIC_URL + `/images/${station}/${imgName}`
+                  : process.env.PUBLIC_URL +
+                    `/images/warning/${currentWarning}/${imgName}`
+              }
+              alt=""
+              style={{ maxHeight: "99vh", width: "100%" }}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  );
 };
 
 export default App;
