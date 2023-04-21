@@ -9,9 +9,9 @@ import "swiper/css/autoplay";
 
 import useCountdown from "./hooks/useCountdown";
 
-const apiUrl = "http://10.50.4.5:8888/api/qcnotification";
+const apiUrl = "http://10.50.4.21:8085/api/qcnotification";
 // const apiUrl = "https://localhost:44391/api/qcnotification";
-const signalHub = "http://10.50.4.5:8888/signalhub";
+const signalHub = "http://10.50.4.21:8085/signalhub";
 // const signalHub = "https://localhost:44391/signalhub";
 
 const App = () => {
